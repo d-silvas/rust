@@ -11,6 +11,21 @@ struct Candidate {
     is_prime: bool,
 }
 
+// impl Copy for Candidate {}
+
+// impl Clone for Candidate {
+//     fn clone(&self)-> Candidate {
+//         return Candidate {
+//             num: self.num.clone(),
+//             is_prime: self.is_prime,
+//         }
+//     }
+// }
+
+// const NUM_THREADS: usize = 10;
+// const NUM_CANDIDATES: usize = 100;
+// const NUM_CANDIDATES_PER_THREAD: usize = NUM_CANDIDATES / NUM_THREADS;
+
 fn main() {
     env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
@@ -18,6 +33,7 @@ fn main() {
 
     let num_iter: u32 = 100;
     let mut candidates: Vec<Candidate> = Vec::with_capacity(num_iter as usize);
+    // let mut candidates_matrix = [[Candidate { num: BigUint::zero(), is_prime:false }; NUM_CANDIDATES_PER_THREAD]; NUM_THREADS]
     let large_num: BigUint =
         // BigUint::parse_bytes(b"1000000000000000000000000000000000000000", 10).unwrap();
         BigUint::parse_bytes(b"10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", 10).unwrap();
@@ -35,7 +51,7 @@ fn main() {
 
     let before = Instant::now();
     candidates.par_iter_mut().for_each(|c: &mut Candidate| {
-        c.is_prime = is_prime(c.num.to_string().as_str());
+        c.is_prime = is_prime(&c.num.to_string());
     });
     debug!("Prim checks: {:.2?}", before.elapsed());
 
